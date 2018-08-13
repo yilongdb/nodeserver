@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+    <title>Test Login</title>
+    <meta name="google-signin-client_id" content="30743580075-vheeeeml0dmhb42uhglfdkmafvbnh6c0.apps.googleusercontent.com">
+</head>
+
+<body>
+<div class="g-signin2" data-onsuccess="onSignIn" data-theme="dark"></div>
+<script type="text/javascript">
+    function onSignIn(user) {
+        const id_token = user.Zi.id_token;
+        console.log(user.getAuthResponse().id_token)
+    }
+</script>
+</body>
+
+</html>

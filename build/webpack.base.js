@@ -1,19 +1,29 @@
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
-const NodemonPlugin = require( 'nodemon-webpack-plugin' )
+const NodemonPlugin = require('nodemon-webpack-plugin')
+
+function resolve (dir) {
+    return path.join(__dirname, '..', dir)
+}
 
 module.exports = {
-    mode:"development",
+    mode: "development",
     target: "node",
-    context:path.resolve(__dirname , '../src'),
+    context: path.resolve(__dirname, resolve('src')),
     entry: "./main.js",
     watch: true,
-    module:{
-        rules:[
+    resolve: {
+        extensions: [".js", ".json"],
+        alias: {
+            '@': resolve('src'),
+        }
+    },
+    module: {
+        rules: [
             {
-                test:/\.js$/,
-                exclude:/node_modules/,
-                use:['babel-loader']
+                test: /\.js$/,
+                exclude: /node_modules/,
+                use: ['babel-loader']
             }
         ]
     },
@@ -22,6 +32,7 @@ module.exports = {
         path: path.resolve(__dirname, "../dist"),
         filename: "index.js"
     },
+    devtool:'source-map',
     externals: [nodeExternals()],
     plugins: [
         new NodemonPlugin({
