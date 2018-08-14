@@ -8,7 +8,7 @@ export const createToken = async (payload, options = {}) => {
     return new Promise((resolve, reject) => {
         jwt.sign(payload, JWT_SECRET, options, (err, token) => {
             if (err) {
-                reject(err)
+                reject('create token error')
             } else {
                 resolve(token)
             }

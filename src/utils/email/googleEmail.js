@@ -18,10 +18,10 @@ oauth2Client.on('tokens' , tokens => {
     }
     accessToken = tokens.access_token
 })
-oauth2Client.refreshAccessToken(function (err , tokens) {
-    console.log('get accessToken token')
-    accessToken = tokens.access_token
-})
+// oauth2Client.refreshAccessToken(function (err , tokens) {
+//     console.log('get accessToken token')
+//     accessToken = tokens.access_token
+// })
 
 // oauth2Client.eagerRefreshThresholdMillis
 
@@ -50,6 +50,7 @@ const mailTransport = nodemailer.createTransport({
     auth:auth
 })
 
+
 export const sendMail = async (from , to , subject , html) =>{
     return new Promise((resolve , reject)=>{
         mailTransport.sendMail({
@@ -67,5 +68,6 @@ export const sendMail = async (from , to , subject , html) =>{
         })
     })
 }
+
 
 

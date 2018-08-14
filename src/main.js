@@ -1,77 +1,54 @@
-import 'regenerator-runtime/runtime';
-import passport from 'passport'
+import 'regenerator-runtime/runtime'
 import './config'
+import logger from './utils/logger'
+import applyMiddles from './middles'
+import { MongoError }  from 'mongodb'
 
-import db from './config/db'
-import express from 'express'
-import initGoogleAuth from './config/auth'
-import cors from 'cors'
-import routers from './controllers'
+// import './utils/email/googleEmail'
+import './utils/email/qqEmail'
 
-
-
-import middles from './middles'
-import {serveStaticFile} from "./utils/file";
-import expressHandlebars from 'express3-handlebars'
-import {isAuth} from "./utils/auth";
-import googleRoute from './controllers/googleAuth'
-import path from 'path'
-
-import './utils/email'
-const app = express();
-app.use(cors())
-const handlebars = expressHandlebars.create({
-    defaultLayout: 'main',
-    layoutsDir: path.join(__dirname, 'views/layouts')
-})
-app.engine('handlebars' , handlebars.engine)
-app.set('view engine' , 'handlebars')
-
-app.set('views', 'src/views/')
-
-app.set('port', process.env.PORT || 3000);
-db(app)
+console.info('this is conole info')
+console.info('this is conole info')
+console.info('this is conole info')
+console.log('this is conole info')
+console.log('this is conole info')
+const app = applyMiddles(app)
 
 
-initGoogleAuth(passport)
-const rest = middles(app , passport)
-
-routers(rest)
-
-googleRoute(app , passport)
-
-
-
-app.get('/' , isAuth, function (req , res , next) {
-    res.render('index', {user: req.user})
-})
-app.get('/login' , function (req , res , next) {
-    res.render('login')
-})
-app.get('/account' ,isAuth, function (req , res , next) {
-    res.render('account')
-})
-
-
-
-
-// custom 404 page
 app.use(function(req, res){
-    res.type('text/plain');
-    res.status(404);
-    res.send("sdf");
+    res.type('text/plain')
+    res.status(404)
+    res.send("404 error")
+})
+
+app.use(function handleDatabaseError(error, req, res, next) {
+    if (error instanceof MongoError) {
+        return res.status(503).json({
+            type: 'MongoError',
+            message: error.message
+        });
+    }
+    next(error);
 });
-// custom 500 page
 app.use(function(err, req, res, next){
-    console.error(err.stack);
-    res.type('text/plain');
-    res.status(500);
-    res.send('500 - Server Error');
-});
+    if (err.name === 'UnauthorizedError') {
+        res.status(401).send('invalid token...');
+    }
+    logger.error(err.stack)
+    const isDev = process.env.NODE_ENV === 'development'
+    const error = {
+        message : err.message || '500 - Server Error'
+    }
+    if(isDev){
+        error.stack = err.stack
+    }
+    res.status(err.status || 500)
+    res.json(error)
+})
 
 app.on('ready' , function () {
     app.listen(app.get('port'), function(){
-        console.log( 'Express started on http://localhost:' +
-            app.get('port') + '; press Ctrl-C to terminate.' );
-    });
+        logger.info( 'Express started on http://localhost:' +
+            app.get('port') + ' press Ctrl-C to terminate.' )
+    })
 })
