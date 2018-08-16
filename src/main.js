@@ -16,6 +16,7 @@ const app = applyMiddles(app)
 
 
 app.use(function(req, res){
+    console.log('this is in error page')
     res.type('text/plain')
     res.status(404)
     res.send("404 error")
@@ -32,7 +33,7 @@ app.use(function handleDatabaseError(error, req, res, next) {
 });
 app.use(function(err, req, res, next){
     if (err.name === 'UnauthorizedError') {
-        res.status(401).send('invalid token...');
+        return res.status(401).send('invalid token...');
     }
     logger.error(err.stack)
     const isDev = process.env.NODE_ENV === 'development'

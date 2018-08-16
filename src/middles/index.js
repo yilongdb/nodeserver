@@ -8,7 +8,8 @@ import path from "path";
 import initDB from '../config/db'
 import jwt from './jwt'
 import logger from '../utils/logger'
-
+import compression from 'compression'
+import http from './http'
 const app = express()
 app.set('port', process.env.PORT || 3000)
 
@@ -30,13 +31,14 @@ export default function applyMiddles() {
     app.set('view engine', 'handlebars')
     app.set('views', 'src/views/')
 
+    app.use(compression())
     app.use(cors())
     app.use(bodyParser.urlencoded({extended: true}))
     app.use(bodyParser.json())
     // app.use(rest.processRequest())
     app.use(jwt)
     app.use(express.static('public'))
-
+    http(app)
     registerRouter(app)
     initDB(app)
 
