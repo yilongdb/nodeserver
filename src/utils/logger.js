@@ -1,12 +1,12 @@
 import winston from 'winston'
 import {red} from 'colors'
-const { createLogger, format, transports } = winston
-const { combine, timestamp, label, printf, colorize  ,prettyPrint } = format
+import util from 'util'
 import winstonMongoDb from 'winston-mongodb'
 
-// const myFormat = printf(info => {
-//     return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`
-// })
+const { createLogger, format, transports } = winston
+const { combine, timestamp, label, printf, colorize  ,prettyPrint } = format
+
+const isTesting = process.env.NODE_ENV === 'test'
 
 const myFormat = printf(info => {
     return `${info.timestamp} [${info.label}] ${info.level}: ${info.message}`;
@@ -16,6 +16,7 @@ const MongoDBLogger = winstonMongoDb.MongoDB
 
 const logger = winston.createLogger({
     level:'info',
+    silent:isTesting,
     // format: winston.format.json(),
     format: combine(
         label({ label: 'My Label' }),
@@ -34,14 +35,29 @@ const logger = winston.createLogger({
     ]
 })
 
-console.log('logger init')
+if(!isTesting){
+    function formatArgs(args){
+        return [util.format.apply(util.format, Array.prototype.slice.call(args))];
+    }
+
+    console.log = function(){
+        logger.info.apply(logger, formatArgs(arguments));
+    };
+    console.info = function(){
+        logger.info.apply(logger, formatArgs(arguments));
+    };
+    console.warn = function(){
+        logger.warn.apply(logger, formatArgs(arguments));
+    };
+    console.error = function(){
+        logger.error.apply(logger, formatArgs(arguments));
+    };
+    console.debug = function(){
+        logger.debug.apply(logger, formatArgs(arguments));
+    };
+}
+
+
+
 export default logger
 
-// winston.add(winston.transports.File , {
-//     filename:'nodeserver.log',
-//     level:'error'
-// })
-//
-// winston.add(db , {
-//     db:process.env.LOGGER_DB_URL
-// })

@@ -16,3 +16,9 @@ export const sendRes = (res , obj, status = 200) => {
     res.status(status)
     res.send(obj)
 }
+
+export const getError = (msg , status = 400) =>{
+    const error = new Error(msg)
+    error.status = status
+    return error
+}

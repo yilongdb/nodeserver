@@ -1,7 +1,7 @@
 import {asyncWrap} from "../utils/common";
 import File from '../models/file'
 import User from '../models/user'
-import {sendRes} from "../utils/respond";
+import {getError, sendRes} from "../utils/respond";
 
 
 const idReg = /^[0-9a-fA-F]{24}$/
@@ -15,7 +15,7 @@ async function getFileById(req , res) {
     if(!id){
         throw new Error('file id is empty')
     }
-    const file = File.getFileById(id)
+    const file = await File.findById(id)
     res.sendRes(file)
 }
 
@@ -36,22 +36,27 @@ async function createFile(req , res) {
 async function deleteFile(req , res) {
     const id = req.params.id
     if(!id){
-        throw new Error('file id is empty')
+        throw getError('file id is empty')
     }
-    await File.delete(id)
+    await File.findOneAndDelete(id)
     res.sendRes({isDelete:true})
 }
 
 async function updateFile(req , res) {
-    const file = await File.update({id:req.body.id} , req.body)
+    const fileId = req.params.id
+    if(!idReg.test(fileId)){
+        throw getError('file id is need')
+    }
+    // const file = await File.update({id:fileId} , req.body)
+    const file = await File.findOneAndUpdate({_id:fileId} , req.body , {new:true})
     res.sendRes({file})
 }
 
 export default function registerRoutes(app){
     app.get('/api/files' ,asyncWrap(getFiles))
-    app.get('/api/file/:id' ,asyncWrap(getFiles))
+    app.get('/api/file/:id' ,asyncWrap(getFileById))
     app.post('/api/file',asyncWrap(createFile))
     app.delete('/api/file/:id' , asyncWrap(deleteFile))
-    app.put('/api/file' , asyncWrap(updateFile))
+    app.put('/api/file/:id' , asyncWrap(updateFile))
 
 }

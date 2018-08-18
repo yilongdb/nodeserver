@@ -16,6 +16,7 @@ app.set('port', process.env.PORT || 3000)
 const restOptions = {
     context: '/api'
 }
+78
 const cookieSecret = process.env.COOKIE_SECRET
 
 const rest = Rest.create(restOptions)
@@ -43,6 +44,5 @@ export default function applyMiddles() {
     initDB(app)
 
     logger.info('init middles')
-    console.log('init middles')
     return app
 }

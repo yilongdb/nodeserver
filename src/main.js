@@ -2,25 +2,13 @@ import 'regenerator-runtime/runtime'
 import './config'
 import logger from './utils/logger'
 import applyMiddles from './middles'
-import { MongoError }  from 'mongodb'
-
-// import './utils/email/googleEmail'
+import {MongoError} from 'mongodb'
 import './utils/email/qqEmail'
 
-console.info('this is conole info')
-console.info('this is conole info')
-console.info('this is conole info')
-console.log('this is conole info')
-console.log('this is conole info')
 const app = applyMiddles(app)
 
 
-app.use(function(req, res){
-    console.log('this is in error page')
-    res.type('text/plain')
-    res.status(404)
-    res.send("404 error")
-})
+
 
 app.use(function handleDatabaseError(error, req, res, next) {
     if (error instanceof MongoError) {
@@ -46,10 +34,20 @@ app.use(function(err, req, res, next){
     res.status(err.status || 500)
     res.json(error)
 })
-
+app.use(function(req, res){
+    res.type('text/plain')
+    res.status(404)
+    res.send("404 error")
+})
 app.on('ready' , function () {
     app.listen(app.get('port'), function(){
         logger.info( 'Express started on http://localhost:' +
             app.get('port') + ' press Ctrl-C to terminate.' )
     })
 })
+
+process.on('exit' , function () {
+    console.log('app exit')
+})
+//for test
+export default app
