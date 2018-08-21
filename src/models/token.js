@@ -2,7 +2,7 @@ import mongoose from 'mongoose'
 const Schema = mongoose.Schema
 
 const tokenSchema = new Schema({
-    email:{type:String},
+    email:{type:String, index:true},
     refreshToken:{type:String,required:true}
 })
 

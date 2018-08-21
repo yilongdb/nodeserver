@@ -5,10 +5,10 @@ const types = ['box' , 'text' , 'image' , 'icon' , 'component' , 'slot']
 const layerSchema = new Schema({
     name:String,
     type:{type:String , lowercase:true,enum:types},
-    cid:{type:String,required:true},
+    cid:{type:Schema.Types.ObjectId ,required:true, index:true},
     isDeleted:{type:Boolean,default:false},
     subLayerOrder:{type:Array},
-    parentID:{type:String},
+    parentID:{type:Schema.Types.ObjectId },
     styles:String
 })
 

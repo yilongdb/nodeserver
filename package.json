@@ -3,13 +3,37 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "nyc": {
+    "check-coverage": true,
+    "per-file": true,
+    "lines": 90,
+    "statements": 90,
+    "functions": 90,
+    "branches": 90,
+    "include": [
+      "./src/**/*.js"
+    ],
+    "reporter": [
+      "lcov",
+      "text-summary",
+      "html"
+    ],
+    "require": [
+      "@babel/register"
+    ],
+    "cache": true,
+    "all": true,
+    "temp-directory": "./alternative-tmp",
+    "report-dir": "./alternative"
+  },
   "scripts": {
-    "test": "SET NODE_ENV=test&& mocha --require @babel/register --timeout 5s --exit -s 20",
+    "test": "SET NODE_ENV=test&& mocha  --require @babel/register --timeout 5s --exit -s 20",
     "build": "webpack --config .\\build\\webpack.base.js",
     "debug": "babel-node  --presets @babel/env .\\src\\main.js",
     "babel-node": "babel-node --presets=@babel/env",
     "dev": "nodemon  --exec npm run babel-node -- .\\src\\main.js",
-    "start": "node .\\dist\\index.js"
+    "start": "node .\\dist\\index.js",
+    "coverage": "SET NODE_ENV=test&& nyc mocha --timeout 5s --exit -s 20"
   },
   "keywords": [],
   "author": "",
@@ -21,9 +45,11 @@
     "@babel/preset-env": "^7.0.0-rc.1",
     "@babel/register": "^7.0.0-rc.1",
     "babel-loader": "^8.0.0-beta.4",
+    "babel-plugin-istanbul": "^4.1.6",
     "chai-http": "^4.0.0",
     "mocha": "^5.2.0",
     "nodemon-webpack-plugin": "^4.0.3",
+    "nyc": "^12.0.2",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-node-externals": "^1.7.2"
@@ -31,6 +57,7 @@
   "dependencies": {
     "bluebird": "^3.5.1",
     "chai": "^4.1.2",
+    "co": "^4.6.0",
     "colors": "^1.3.1",
     "compression": "^1.7.3",
     "connect-rest": "^3.0.17",
