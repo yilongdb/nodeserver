@@ -28,9 +28,10 @@
   },
   "scripts": {
     "test": "SET NODE_ENV=test&& mocha  --require @babel/register --timeout 5s --exit -s 20 --recursive ",
+    "prebuild":"rimraf ./dist",
     "build": "webpack --config .\\build\\webpack.base.js",
     "debug": "babel-node  --presets @babel/env .\\src\\main.js",
-    "babel-node": "babel-node --presets=@babel/env",
+    "babel-node": "babel-node --presets=@babel/env ",
     "dev": "nodemon  --exec npm run babel-node -- .\\src\\main.js",
     "start": "node .\\dist\\index.js",
     "coverage": "SET NODE_ENV=test&& nyc mocha --timeout 5s --exit -s 20 --recursive "
@@ -51,6 +52,7 @@
     "mocha": "^5.2.0",
     "nodemon-webpack-plugin": "^4.0.3",
     "nyc": "^12.0.2",
+    "rimraf": "^2.6.2",
     "webpack": "^4.16.5",
     "webpack-cli": "^3.1.0",
     "webpack-node-externals": "^1.7.2"

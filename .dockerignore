@@ -1,0 +1,10 @@
+.git
+.gitignore
+Dockerfile
+docker-compose.yml
+alternative
+alternative-tmp
+node_modules
+test
+*.log
+dist

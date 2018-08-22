@@ -1,4 +1,4 @@
-// import 'regenerator-runtime/runtime'
+import 'regenerator-runtime/runtime'
 // import 'babel-polyfill'
 import './config'
 import logger from './utils/logger'
@@ -41,8 +41,9 @@ app.use(function(req, res){
     res.send("404 error")
 })
 app.on('ready' , function () {
-    app.listen(app.get('port'), function(){
-        logger.info( 'Express started on http://localhost:' +
+    const port = process.env.PORT || app.get('port')
+    app.listen(port, function(){
+        console.log( 'Express started on http://localhost:' +
             app.get('port') + ' press Ctrl-C to terminate.' )
     })
 })
@@ -51,4 +52,4 @@ process.on('exit' , function () {
     console.log('app exit')
 })
 //for test
-export default app
+// export default app

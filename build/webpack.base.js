@@ -11,7 +11,7 @@ module.exports = {
     target: "node",
     context: path.resolve(__dirname, resolve('src')),
     entry: "./main.js",
-    watch: true,
+    // watch: true,
     resolve: {
         extensions: [".js", ".json"],
         alias: {
@@ -34,9 +34,9 @@ module.exports = {
     },
     devtool:'source-map',
     externals: [nodeExternals()],
-    plugins: [
-        new NodemonPlugin({
-            watch: path.resolve('./dist')
-        })
-    ],
+    // plugins: [
+    //     new NodemonPlugin({
+    //         watch: path.resolve('./dist')
+    //     })
+    // ],
 }
