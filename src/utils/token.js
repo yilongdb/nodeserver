@@ -1,3 +1,6 @@
+//todo way createToken need regenerator-runtime
+import 'regenerator-runtime/runtime'
+// import 'babel-polyfill'
 import jwt from 'jsonwebtoken'
 const JWT_SECRET = process.env.JWT_SECRET
 

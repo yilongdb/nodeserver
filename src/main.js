@@ -1,4 +1,5 @@
-import 'regenerator-runtime/runtime'
+// import 'regenerator-runtime/runtime'
+// import 'babel-polyfill'
 import './config'
 import logger from './utils/logger'
 import applyMiddles from './middles'

@@ -1,9 +1,9 @@
 import mongoose from 'mongoose'
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import User from '../src/models/user'
-import server from '../src/main'
-import {createToken} from "../src/utils/token";
+import User from '../../src/models/user'
+import server from '../../src/main'
+import {createToken} from "../../src/utils/token";
 
 const assert = chai.assert
 const expect = chai.expect

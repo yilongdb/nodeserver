@@ -1,13 +1,14 @@
 import mongoose from 'mongoose'
 import chai from 'chai'
 import chaiHttp from 'chai-http'
-import User from '../src/models/user'
-import File from "../src/models/file"
-import Layer from "../src/models/layer"
-import DesignToken from '../src/models/design-token'
-import Component from '../src/models/component'
-import server from '../src/main'
-import {createToken} from "../src/utils/token";
+import User from '../../src/models/user'
+import File from "../../src/models/file"
+import Layer from "../../src/models/layer"
+import DesignToken from '../../src/models/design-token'
+import Component from '../../src/models/component'
+import server from '../../src/main'
+import {createToken} from "../../src/utils/token";
+import {clearDBTest} from "../utils";
 
 const ObjectId = mongoose.Types.ObjectId
 const assert = chai.assert
@@ -30,18 +31,15 @@ describe('File routes', () => {
         authHeader = `Bearer ${token}`
     })
 
+
+
+
+
     beforeEach(async () => {
-        // await User.remove()
-        // await File.remove()
+        await clearDBTest()
     })
 
-    afterEach(async () => {
-        await User.remove()
-        await File.remove()
-        await Component.remove()
-        await DesignToken.remove()
-        await Layer.remove()
-    })
+
     describe('/GET file', () => {
         it('it should GET all the files', async () => {
             const data = {}

@@ -27,13 +27,13 @@
     "report-dir": "./alternative"
   },
   "scripts": {
-    "test": "SET NODE_ENV=test&& mocha  --require @babel/register --timeout 5s --exit -s 20",
+    "test": "SET NODE_ENV=test&& mocha  --require @babel/register --timeout 5s --exit -s 20 --recursive ",
     "build": "webpack --config .\\build\\webpack.base.js",
     "debug": "babel-node  --presets @babel/env .\\src\\main.js",
     "babel-node": "babel-node --presets=@babel/env",
     "dev": "nodemon  --exec npm run babel-node -- .\\src\\main.js",
     "start": "node .\\dist\\index.js",
-    "coverage": "SET NODE_ENV=test&& nyc mocha --timeout 5s --exit -s 20"
+    "coverage": "SET NODE_ENV=test&& nyc mocha --timeout 5s --exit -s 20 --recursive "
   },
   "keywords": [],
   "author": "",
@@ -42,6 +42,7 @@
     "@babel/cli": "^7.0.0-rc.1",
     "@babel/core": "^7.0.0-rc.1",
     "@babel/node": "^7.0.0-rc.1",
+    "@babel/polyfill": "^7.0.0-rc.2",
     "@babel/preset-env": "^7.0.0-rc.1",
     "@babel/register": "^7.0.0-rc.1",
     "babel-loader": "^8.0.0-beta.4",

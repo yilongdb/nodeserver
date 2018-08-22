@@ -10,28 +10,28 @@ const idReg = /^[0-9a-fA-F]{24}$/
 async function getDesignTokens(req , res) {
     const fid = req.query.fid
     if(!idReg.test(fid)){
-        throw new Error('fid is not valid')
+        throw getError('fid is not valid')
     }
     const tokens = await DesignToken.find({fid})
     res.sendRes(tokens)
 }
 
-async function getDesignTokenById(req , res) {
-    const id = req.params.id
-    if(!idReg.test(id)){
-        throw new Error('token id is empty')
-    }
-    const token = await DesignToken.findById(id)
-    res.sendRes(token)
-}
+// async function getDesignTokenById(req , res) {
+//     const id = req.params.id
+//     if(!idReg.test(id)){
+//         throw getError('token id is empty')
+//     }
+//     const token = await DesignToken.findById(id)
+//     res.sendRes(token)
+// }
 async function createDesignToken(req , res) {
     const fid = req.body.fid
     if(!idReg.test(fid)){
-        throw new Error('fid is not valid')
+        throw getError('fid is not valid')
     }
     const file = await File.findById(fid)
     if(!file){
-        throw new Error('file is not exist')
+        throw getError('file is not exist')
     }
     let token = new DesignToken(req.body)
     token = await token.save()
@@ -58,7 +58,7 @@ async function updateDesignToken(req , res) {
 
 export default function registerRoutes(app){
     app.get('/api/design-tokens' ,asyncWrap(getDesignTokens))
-    app.get('/api/design-token/:id' ,asyncWrap(getDesignTokenById))
+    // app.get('/api/design-token/:id' ,asyncWrap(getDesignTokenById))
     app.post('/api/design-token',asyncWrap(createDesignToken))
     app.delete('/api/design-token/:id' , asyncWrap(deleteDesignToken))
     app.put('/api/design-token/:id' , asyncWrap(updateDesignToken))

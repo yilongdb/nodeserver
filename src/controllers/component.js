@@ -8,28 +8,28 @@ const idReg = /^[0-9a-fA-F]{24}$/
 async function getComponents(req , res) {
     const fid = req.query.fid
     if(!idReg.test(fid)){
-        throw new Error('fid is not valid')
+        throw getError('fid is not valid')
     }
-    const components = await Component.find({fid})
+    const components = await Component.getAllComponents(fid)
     res.sendRes(components)
 }
 //get component->{layers}
 async function getComponentById(req , res) {
     const id = req.params.id
     if(!idReg.test(id)){
-        throw new Error('component id is empty')
+        throw getError('component id is not valid')
     }
-    const component = await Component.findById(id)
+    const component = await Component.getComponentById(id)
     res.sendRes(component)
 }
 async function createComponent(req , res) {
     const fid = req.body.fid
     if(!idReg.test(fid)){
-        throw new Error('fid is not valid')
+        throw getError('fid is not valid')
     }
     const file = await File.findById(fid)
     if(!file){
-        throw new Error('file is not exist')
+        throw getError('file is not exist')
     }
     let component = new Component(req.body)
     component = await component.save()
@@ -41,7 +41,9 @@ async function deleteComponent(req , res) {
     if(!idReg.test(id)){
         throw getError('component id is empty')
     }
-    await Component.findOneAndDelete(id)
+    // await Component.findOneAndDelete(id)
+    const c = await Component.findById(id)
+    await c.remove()
     res.sendRes({isDelete:true})
 }
 
