@@ -3,23 +3,23 @@ import {red} from 'colors'
 import util from 'util'
 import winstonMongoDb from 'winston-mongodb'
 
-const { createLogger, format, transports } = winston
-const { combine, timestamp, label, printf, colorize  ,prettyPrint } = format
+const {createLogger, format, transports} = winston
+const {combine, timestamp, label, printf, colorize, prettyPrint} = format
 
 const isTesting = process.env.NODE_ENV === 'test'
 
 let url = ''
-
+let dbName = `nodeserver-logger-${process.env.NODE_ENV}`
 switch (process.env.NODE_ENV) {
-    case 'test':{
+    case 'test': {
         url = process.env.LOGGER_DB_URL_DEV
         break
     }
-    case 'production':{
+    case 'production': {
         url = process.env.LOGGER_DB_URL
         break
     }
-    default:{
+    default: {
         url = process.env.LOGGER_DB_URL_DEV
         break
     }
@@ -33,48 +33,48 @@ const myFormat = printf(info => {
 const MongoDBLogger = winstonMongoDb.MongoDB
 
 const logger = winston.createLogger({
-    level:'info',
-    silent:isTesting,
+    level: 'info',
+    silent: isTesting,
     format: winston.format.json(),
-    // format: combine(
-    //     label({ label: 'My Label' }),
-    //     timestamp(),
-    //     myFormat,
-    //     prettyPrint()
-    // ),
+    format: combine(
+        timestamp(),
+        myFormat,
+        prettyPrint()
+    ),
     transports: [
-        new winston.transports.File({ filename: 'nodeserver-error.log', level: 'error' }),
-        new winston.transports.File({ filename: 'combined.log'  , level:'info'}),
-        new MongoDBLogger({db:url}),
+        new winston.transports.File({filename: 'nodeserver-error.log', level: 'error'}),
+        new winston.transports.File({filename: 'combined.log', level: 'info'}),
+        new MongoDBLogger({
+            db: url
+        }),
         new winston.transports.Console({
-            timestamp:true,
+            timestamp: true,
             level: 'silly'
         })
     ]
 })
 
-if(!isTesting){
-    function formatArgs(args){
+if (!isTesting) {
+    function formatArgs(args) {
         return [util.format.apply(util.format, Array.prototype.slice.call(args))];
     }
 
-    console.log = function(){
+    console.log = function () {
         logger.info.apply(logger, formatArgs(arguments));
     };
-    console.info = function(){
+    console.info = function () {
         logger.info.apply(logger, formatArgs(arguments));
     };
-    console.warn = function(){
+    console.warn = function () {
         logger.warn.apply(logger, formatArgs(arguments));
     };
-    console.error = function(){
+    console.error = function () {
         logger.error.apply(logger, formatArgs(arguments));
     };
-    console.debug = function(){
+    console.debug = function () {
         logger.debug.apply(logger, formatArgs(arguments));
     };
 }
-
 
 
 export default logger

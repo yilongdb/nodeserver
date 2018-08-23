@@ -4,10 +4,11 @@ import logger from '../utils/logger'
 
 
 let url = ''
-
+let dbName = `nodeserver-${process.env.NODE_ENV}`
 switch (process.env.NODE_ENV) {
     case 'test':{
         url = process.env.DB_URL_TEST
+
         break
     }
     case 'production':{
@@ -34,19 +35,24 @@ mongoose.Promise = Promise
 //         logger.info('db connect')
 //         app.emit('ready')
 //     })
-// }
- function initDB(app) {
-     mongoose.connect(url, {autoIndex: false ,useNewUrlParser: true} /* avoid  warn :  DeprecationWarning:
-     current URL string
-   parser is deprecated, and will be removed in a future version. To use the
-new parser, pass option { useNewUrlParser: true } to MongoClient.connect.
-*/)
+// }{autoIndex: false ,useNewUrlParser: true}
 
+ function initDB(app) {
+     //使用 docker部署的时候 , mogodb 的port必须map为27017
+     const options = {
+         // dbName
+     }
+     mongoose.connect(url,  options , function(error) {
+         if(error){
+             console.log(`connect to mongodb error , env : ${process.env.NODE_ENV} , url : ${url}`)
+         }
+     })
 
     mongoose.connection.once('open', function () {
         logger.info('db connect')
         app.emit('ready')
     })
+
 }
 
 export default initDB

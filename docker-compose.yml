@@ -1,28 +1,35 @@
-  version: '3.5'
-  services:
-    web:
-      build: .
-      image: node-server
-      ports:
-      - "3000:3000"
-      networks:
-      - network1
-      depends_on:
-      - mongodb
-    mongodb:
-      image: mongo
-      restart: always
-      ports:
-      - "27017:27017"
-      networks:
-        network1:
-          aliases:
-          - db
-      volumes:
-      - "/var/node-server/db:/data/db"
+version: '3.5'
+services:
+  web:
+    build: .
+    image: node-server
+    restart: on-failure
+    ports:
+    - "8089:3000"
+    networks:
+    - network1
+    depends_on:
+    - mongodbserver
+    env_file: .env
 
+  mongodbserver:
+    image: mongo
+    restart: always
+    ports:
+    - "27017:27017"
+    networks:
+      network1:
+        aliases:
+        - db
+    volumes:
+    - "dbdata:/data/db"
 
-  networks:
-    network1:
-      driver: bridge
-      name: node-server-network
+networks:
+  network1:
+    driver: bridge
+    name: node-server-network
+volumes:
+  dbdata:
+#mongdo db can only map to 27017 port
+#delete docker compose and restart
+#docker-compose stop && docker-compose down -v && docker-compose build && docker-compose up -d

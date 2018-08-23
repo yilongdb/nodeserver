@@ -1,5 +1,4 @@
 import 'regenerator-runtime/runtime'
-// import 'babel-polyfill'
 import './config'
 import logger from './utils/logger'
 import applyMiddles from './middles'
@@ -7,8 +6,6 @@ import {MongoError} from 'mongodb'
 import './utils/email/qqEmail'
 
 const app = applyMiddles(app)
-
-
 
 
 app.use(function handleDatabaseError(error, req, res, next) {
@@ -40,16 +37,18 @@ app.use(function(req, res){
     res.status(404)
     res.send("404 error")
 })
+
+
 app.on('ready' , function () {
-    const port = process.env.PORT || app.get('port')
+    const port = app.get('port')
     app.listen(port, function(){
-        console.log( 'Express started on http://localhost:' +
-            app.get('port') + ' press Ctrl-C to terminate.' )
+        console.log(`Express started on http://localhost:${port} , env : ${process.env.NODE_ENV}`)
     })
 })
 
 process.on('exit' , function () {
     console.log('app exit')
 })
+
 //for test
-// export default app
+export default app
