@@ -5,31 +5,25 @@ services:
     image: node-server
     restart: on-failure
     ports:
-    - "8089:3000"
+      - "8089:3000"
     networks:
-    - network1
+      - frontend
     depends_on:
-    - mongodbserver
+      - mongodbserver
     env_file: .env
 
-  mongodbserver:
+  mongodb:
     image: mongo
     restart: always
     ports:
-    - "27017:27017"
+      - "37017:27017"
     networks:
-      network1:
-        aliases:
-        - db
+      - frontend
     volumes:
-    - "dbdata:/data/db"
+      - "dbdata:/data/db"
 
 networks:
-  network1:
+  frontend:
     driver: bridge
-    name: node-server-network
 volumes:
   dbdata:
-#mongdo db can only map to 27017 port
-#delete docker compose and restart
-#docker-compose stop && docker-compose down -v && docker-compose build && docker-compose up -d
